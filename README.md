@@ -68,8 +68,10 @@ Create a .env file in the root directory and add the following variables:
    ```bash
    npm start
 
-<a name="usage">Usage</a>Usage
+6. **Usage**
+
 Once the server is running and the frontend is started, you can access the application in your web browser at http://localhost:3000.
 
-<a name="license">License</a>License
+7. **License**
+
 This project is licensed under the MIT License.
