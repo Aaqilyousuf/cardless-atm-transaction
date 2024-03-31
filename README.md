@@ -42,4 +42,28 @@ To run this project locally, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Aaqilyousuf/cardless-atm-tansaction.git
+
+2. **Install dependencies:**
+
+   ```bash
+   cd client
+   npm install
+
+3. **Set up environment variables:**
+
+Create a .env file in the root directory and add the following variables:
+
+    ```bash
+    PORT=3001
+    MONGODB_URI=<your-mongodb-uri>
+    SECRET_KEY=<your-secret-key-for-jwt>
+
+4. **Run the backend server:**
+   
+   ```bash
+   npm run server
+5. **Run the frontend development server:**
+   
+   ```bash
+   npm start
