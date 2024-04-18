@@ -95,6 +95,14 @@ const UserDetails = () => {
           <div className="min-h-[40px]  bg-white mb-4">
             <div className="text-center">
               <h1 className="text-[14px] text-gray-600 font-extrabold">
+                ACCOUNT TYPE
+              </h1>
+              <p>Savings</p>
+            </div>
+          </div>
+          <div className="min-h-[40px]  bg-white mb-4">
+            <div className="text-center">
+              <h1 className="text-[14px] text-gray-600 font-extrabold">
                 IFSC CODE
               </h1>
               <p>14442550990</p>
