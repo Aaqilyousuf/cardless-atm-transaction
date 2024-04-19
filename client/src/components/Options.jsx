@@ -9,6 +9,11 @@ import { useNavigate } from "react-router-dom";
 const Options = () => {
   const navigate = useNavigate();
 
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    navigate("/login");
+  };
+
   const handleWithdraw = (e) => {
     e.preventDefault();
     navigate("/withdraw");
@@ -44,12 +49,15 @@ const Options = () => {
           <h1 className="text-white text-3xl font-semibold">ATM</h1>
           <p className="text-white text-sm">24 x 7 banking</p>
         </div>
-        <div className="min-h-[100px] sm:col-span-2 bg-[#CD3F3E] rounded-md shadow-lg flex justify-center items-center cursor-pointer hover:bg-[#FD5E53] hover:shadow-[inset_-12px_-8px_40px_#46464620] transition-all duration-300 ease-linear">
+        <div
+          className="min-h-[100px] sm:col-span-2 bg-[#CD3F3E] rounded-md shadow-lg flex justify-center items-center cursor-pointer hover:bg-[#FD5E53] hover:shadow-[inset_-12px_-8px_40px_#46464620] transition-all duration-300 ease-linear"
+          onClick={handleLogOut}
+        >
           <button className="text-white font-semibold">Log Out</button>
         </div>
       </div>
       <div className="w-full flex justify-center items-center mt-7">
-        <div className="w-[90%] sm:w-[800px] h-10 bg-[#424769] rounded-md flex justify-center items-center shadow-lg border-4 border-[#EEF2FF]">
+        <div className="w-[90%] sm:w-[800px] h-100 bg-[#424769] rounded-md flex justify-center items-center shadow-lg border-4 border-[#EEF2FF]">
           <h1 className="text-white text-lg font-medium">Balance $20,789</h1>
         </div>
       </div>
