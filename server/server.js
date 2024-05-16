@@ -2,7 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import cors from "cors";
-import router from "./routes/auth-router.js";
+import authRouter from "./routes/auth-router.js";
+// import verifyRouter from "./routes/authRoute-verifyOtp.js";
 
 dotenv.config();
 
@@ -11,10 +12,14 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Server Sucessfully Running");
+  res.send("Server Sucessfully Running so server is still alive");
+});
+app.get("/api/auth", (req, res) => {
+  res.send("this is from auth side!!!");
 });
 
-app.use("/api/auth", router);
+app.use("/api/auth", authRouter);
+// app.use("/api/auth", authRouter);
 
 mongoose
   .connect(process.env.MONGODB_CONFIG)
