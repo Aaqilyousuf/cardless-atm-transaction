@@ -1,9 +1,12 @@
 import express from "express";
-import { signin } from "../controller/auth-controller.js"; // Adjust the path as needed
+import { login, signin } from "../controller/auth-controller.js";
+import { VerifyOtp } from "../controller/auth-controller.js";
+// Adjust the path as needed
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/signin", signin);
-// router.post("/verifyOtp", verifyOtp);
+authRouter.post("/signin", signin);
+authRouter.post("/verifyOtp", VerifyOtp);
+authRouter.post("/login", login);
 
-export default router;
+export default authRouter;

@@ -1,0 +1,74 @@
+// firstName,
+// lastName,
+// dob,
+// aadharNumber,
+// PhoneNumber,
+// bank,
+// accountType,
+// branch,
+// accountNumber,
+// ifscCode,
+// pin,
+// email,
+// password,
+
+//   try {
+//     const response = await fetch("http://localhost:8080/api/auth/VerifyOtp", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ generatedOtp, joinedOtp }),
+//     });
+//     console.log(response);
+//     const data = await response.json();
+//     if (data.ok) {
+//       setVerifyOtp(true);
+//       alert("OtpVerified");
+//       console.log(data);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     alert("Some error happeing ", err);
+//     console.error("ERROR!!! : ", err);
+//   }
+// import express from "express";
+
+// import { VerifyOtp } from "../controller/auth-controller.js";
+// // Adjust the path as needed
+
+// const verifyRouter = express.Router();
+
+// verifyRouter.post("/verifyOtp", VerifyOtp);
+
+// export default verifyRouter;
+// const handleOtp = async () => {
+//     alert(otp.join(""));
+//     const joinedOtp = otp.join("");
+//     console.log(joinedOtp);
+//     console.log(generatedOtp);
+//     try {
+//       const response = await fetch("http://localhost:8080/api/auth/verifyOtp", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({}),
+//       });
+//       console.log(response);
+//       const data = await response.json();
+//       console.log(data);
+//       if (data.ok) {
+//         setVerifyOtp(true);
+//         alert("OtpVerified");
+//         console.log(data);
+//       }
+//     } catch (err) {
+//       alert(err);
+//       console.log(err);
+//       alert("Some error happeing ", err);
+//       console.error("ERROR!!! : ", err);
+//     }
+//     setOtp(new Array(4).fill(""));
+//     // inputRef.current[0].current.focus();
+//   };

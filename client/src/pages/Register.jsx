@@ -1,12 +1,11 @@
 import React, { Fragment, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PopUpModel from "../components/models/PopUpModel";
-import { GenerateOtp } from "../utils/GenerateOtp";
 
 const Register = () => {
   const [showOtpModel, setShowOtpModel] = useState(false);
   const [otp, setOtp] = useState(new Array(4).fill(""));
-  const [verifyOtp, setVerifyOtp] = useState(false);
+  const [isotpsent, setIsOtpSent] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [PhoneNumber, setPhoneNumber] = useState("");
@@ -20,8 +19,9 @@ const Register = () => {
   const [pin, setPin] = useState("");
   const [email, setEmai] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
   const inputRef = useRef([...Array(4)].map(() => React.createRef()));
-  const generatedOtp = GenerateOtp();
+  const navigate = useNavigate();
   // console.log(dob);
   // console.log(firstName);
   // console.log(lastName);
@@ -40,93 +40,90 @@ const Register = () => {
     }
   };
   const handleOtp = async () => {
-    alert(generatedOtp);
+    // Existing code for handling OTP submission
+    const joinedOtp = otp.join("");
+    console.log(joinedOtp);
     const userData = {
       firstName,
       lastName,
-      dob,
       aadharNumber,
       PhoneNumber,
-      bank,
+      ifscCode,
+      dob,
+      accountNumber,
       accountType,
       branch,
-      accountNumber,
-      ifscCode,
-      pin,
+      bank,
       email,
       password,
-      generatedOtp,
-      otp,
+      pin,
+      joinedOtp,
     };
     try {
-      const response = await fetch("http://localhost:8080/api/auth/signin", {
+      const response = await fetch("http://localhost:8080/api/auth/verifyOtp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
-      const data = await response.json();
-      if (data.ok) {
-        setVerifyOtp(true);
-        console.log("OtpVerified");
-        console.log(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-
-    setOtp(new Array(4).fill(""));
-    inputRef.current[0].current.focus();
-  };
-  const createAccount = async (e) => {
-    e.preventDefault();
-    setShowOtpModel(true);
-    // const userData = {
-    //   firstName,
-    //   lastName,
-    //   dob,
-    //   aadharNumber,
-    //   PhoneNumber,
-    //   bank,
-    //   accountType,
-    //   branch,
-    //   accountNumber,
-    //   ifscCode,
-    //   pin,
-    //   email,
-    //   password,
-    //   generatedOtp,
-    // };
-    console.log(
-      aadharNumber,
-      PhoneNumber,
-      bank,
-      accountType,
-      branch,
-      accountNumber,
-      ifscCode,
-      pin,
-      email,
-      password,
-      generatedOtp
-    );
-    alert(generatedOtp);
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ generatedOtp, otp, email }),
-      });
 
       const data = await response.json();
       console.log(data);
+      console.log(userData);
+      if (response.status === 201) {
+        console.log(data);
+        alert("Yep otp verified ");
+        navigate("/login");
+      } else {
+        alert("Wrong OTP!!!");
+      }
+      // setVerifyOtp(true);
+      // alert("OtpVerified");
     } catch (err) {
-      console.error(err);
+      // Handle errors
+      alert("Some error happened: " + err.message);
+      console.error("ERROR!!! :", err);
     }
-    // console.log(generatedOtp);
+    setOtp(new Array(4).fill(""));
+    // inputRef.current[0].current.focus();
+  };
+
+  const createAccount = async (e) => {
+    e.preventDefault();
+    let error = {};
+
+    if (!aadharNumber.trim() || aadharNumber.length !== 12) {
+      error.aadharNumber = "Aadhar number must be 12 digits";
+    } else if (!PhoneNumber.trim() || PhoneNumber.length !== 10) {
+      error.pin = "PIN number must be four digits";
+    } else if (!accountNumber.trim() || accountNumber.length !== 16) {
+      error.accountNumber = "Card number must be 16 digits";
+    } else if (!pin.trim() || pin.length !== 4) {
+      error.pin = "Pin number must be 4 digits";
+    } else {
+      setShowOtpModel(true);
+      try {
+        const response = await fetch("http://localhost:8080/api/auth/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+        if (response.status === 201) {
+          setIsOtpSent(true);
+          console.log(data);
+        } else {
+          alert("Something wrong in sending OTP ");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    setErrors(error);
   };
 
   return (
@@ -201,6 +198,9 @@ const Register = () => {
                     value={aadharNumber}
                     onChange={(e) => setAadharNumber(e.target.value)}
                   />
+                  {errors && (
+                    <p className="text-red-600">{errors.aadharNumber}</p>
+                  )}
                 </div>
                 <div className="mt-5">
                   <input
@@ -211,6 +211,9 @@ const Register = () => {
                     value={PhoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
+                  {errors && (
+                    <p className="text-red-600">{errors.PhoneNumber}</p>
+                  )}
                 </div>
                 <div className="mt-5">
                   <select
@@ -260,6 +263,9 @@ const Register = () => {
                     value={accountNumber}
                     onChange={(e) => setAccountNumber(e.target.value)}
                   />
+                  {errors && (
+                    <p className="text-red-600">{errors.accountNumber}</p>
+                  )}
                 </div>
                 <div className="mt-5">
                   <input
@@ -280,6 +286,7 @@ const Register = () => {
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
                   />
+                  {errors && <p className="text-red-600">{errors.pin}</p>}
                 </div>
                 <div className="mt-5">
                   <input
@@ -311,7 +318,7 @@ const Register = () => {
                 </div>
                 <div className="mt-5">
                   <button
-                    className="w-full bg-blue-500 py-3 text-center text-white rounded-md"
+                    className="w-full bg-blue-500 py-3 text-center text-white rounded-md hover:bg-blue-700"
                     onClick={createAccount}
                   >
                     Create
@@ -322,38 +329,40 @@ const Register = () => {
           </div>
         </div>
       </div>
-      <PopUpModel
-        isVisible={showOtpModel}
-        closeModel={() => setShowOtpModel(false)}
-      >
-        <div className="">
-          <h1 className="text-lg text-gray-500 font-bold c">
-            Account Registeration
-          </h1>
-          <h2 className="text-md text-gray-400 font-medium mt-5">
-            OTP sent to the registered email
-          </h2>
-          {otp.map((data, i) => {
-            return (
-              <input
-                key={i}
-                type="text"
-                value={data}
-                maxLength={1}
-                onChange={(e) => handleOtpChange(e, i)}
-                className="border-2 p-2 mr-2 text-center mt-10 border-gray-400 outline-none w-[50px] focus:border-black"
-                ref={inputRef.current[i]}
-              />
-            );
-          })}
-        </div>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-medium h-10 w-[110px] mt-6 rounded-md"
-          onClick={handleOtp}
+      {isotpsent && (
+        <PopUpModel
+          isVisible={showOtpModel}
+          closeModel={() => setShowOtpModel(false)}
         >
-          Submit
-        </button>
-      </PopUpModel>
+          <div className="">
+            <h1 className="text-lg text-gray-500 font-bold c">
+              Account Registeration
+            </h1>
+            <h2 className="text-md text-gray-400 font-medium mt-5">
+              OTP sent to the registered email
+            </h2>
+            {otp.map((data, i) => {
+              return (
+                <input
+                  key={i}
+                  type="text"
+                  value={data}
+                  maxLength={1}
+                  onChange={(e) => handleOtpChange(e, i)}
+                  className="border-2 p-2 mr-2 text-center mt-10 border-gray-400 outline-none w-[50px] focus:border-black"
+                  ref={inputRef.current[i]}
+                />
+              );
+            })}
+          </div>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-medium h-10 w-[110px] mt-6 rounded-md"
+            onClick={handleOtp}
+          >
+            Submit
+          </button>
+        </PopUpModel>
+      )}
     </Fragment>
   );
 };

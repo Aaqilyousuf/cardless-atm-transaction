@@ -33,7 +33,7 @@ const userSchema = new Schema({
   },
   branch: {
     type: String,
-    required: true,
+    required: false,
   },
   accountNumber: {
     type: Number,
@@ -45,9 +45,8 @@ const userSchema = new Schema({
     required: true,
   },
   pin: {
-    type: Number,
+    type: String,
     required: true,
-    minlength: 4,
   },
   email: {
     type: String,

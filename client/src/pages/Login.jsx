@@ -7,8 +7,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    cardNumber: null,
-    pinNumber: null,
+    cardNumber: "",
+    pinNumber: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -25,7 +25,7 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let error = {};
     if (!form.cardNumber.trim() || form.cardNumber.length !== 16) {
@@ -33,8 +33,25 @@ const Login = () => {
     } else if (!form.pinNumber.trim() || form.pinNumber.length !== 4) {
       error.pinNumber = "Pin number Required";
     } else {
-      navigate("/");
-      alert("Login succesfull");
+      try {
+        const response = await fetch("http://localhost:8080/api/auth/login", {
+          method: "POST",
+          "Content-Type": "application/json",
+          body: JSON.stringify({
+            cardNumber: form.cardNumber,
+            pin: form.pinNumber,
+          }),
+        });
+        const data = await response.json();
+        console.log(data);
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          alert("Successfully logined");
+          navigate("/");
+        }
+      } catch (err) {
+        console.log("error: " + err);
+      }
     }
     setErrors(error);
   };
@@ -56,6 +73,8 @@ const Login = () => {
       input.previousElementSibling.focus(); // Focus on the previous input
     }
   };
+
+  const handleLogin = async () => {};
   return (
     <Fragment>
       <div className="bg-[#F1F1F1] h-screen flex items-center justify-center">
@@ -98,7 +117,10 @@ const Login = () => {
               {errors && <p className="text-red-500">{errors.pinNumber}</p>}
             </div>
             <div className="flex flex-col gap-3">
-              <button className="bg-blue-500 text-white font-medium h-10 rounded-md">
+              <button
+                className="bg-blue-500 text-white font-medium h-10 rounded-md hover:bg-blue-700"
+                onClick={handleLogin}
+              >
                 Login
               </button>
               <p>
