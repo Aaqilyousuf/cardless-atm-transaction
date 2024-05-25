@@ -120,7 +120,7 @@ const Register = () => {
           alert("Something wrong in sending OTP ");
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error" + err.message);
       }
     }
     setErrors(error);

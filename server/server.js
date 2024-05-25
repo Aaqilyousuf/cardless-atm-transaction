@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import authRouter from "./routes/auth-router.js";
+import transactionRouter from "./routes/transaction-route.js";
 // import verifyRouter from "./routes/authRoute-verifyOtp.js";
 
 dotenv.config();
@@ -17,9 +18,12 @@ app.get("/", (req, res) => {
 app.get("/api/auth", (req, res) => {
   res.send("this is from auth side!!!");
 });
+app.get("/api/transaction", (req, res) => {
+  res.send("this is from transaction side!!!");
+});
 
 app.use("/api/auth", authRouter);
-// app.use("/api/auth", authRouter);
+app.use("/api/transaction", transactionRouter);
 
 mongoose
   .connect(process.env.MONGODB_CONFIG)

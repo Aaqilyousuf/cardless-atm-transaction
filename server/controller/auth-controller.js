@@ -18,7 +18,7 @@ dotenv.config();
 
 let generatedOtp;
 
-export const signin = (req, res) => {
+export const register = (req, res) => {
   const { email } = req.body;
   generatedOtp = GenerateOtp();
   console.log("OTP sent to email: " + generatedOtp);
@@ -121,7 +121,7 @@ export const VerifyOtp = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ msg: " User already exist!!!" });
     } else {
-      const salt = bcrypt.genSaltSync(10);
+      const salt = bcrypt.genSaltSync(0);
       const hashedPin = bcrypt.hashSync(pin, salt);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
@@ -139,6 +139,7 @@ export const VerifyOtp = async (req, res) => {
         pin: hashedPin,
         email,
         password: hashedPassword,
+        balance: 0,
       });
     }
     res.status(201).json({ msg: "User account created successfully" });
@@ -148,9 +149,9 @@ export const VerifyOtp = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { cardNumber, pin } = req.body;
+  const { accountNumber, pin } = req.body;
   try {
-    const loginUser = await User.findOne({ cardNumber });
+    const loginUser = await User.findOne({ accountNumber });
     if (!loginUser) {
       return res.status(404).json({ msg: "User not found 404" });
     }
@@ -163,14 +164,30 @@ export const login = async (req, res) => {
           id: loginUser._id,
           userName: loginUser.firstName + loginUser.lastName,
           userEmail: loginUser.email,
-          accountNumber: loginUser.accountNumber,
+          cretedAt: Date.now(),
         },
-        process.env.JWT_SECRET_KEY
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "1h" }
       );
+      const userData = {
+        firstName: loginUser.firstName,
+        lastName: loginUser.lastName,
+        aadharNumber: loginUser.aadharNumber,
+        phoneNumber: loginUser.phoneNumber,
+        ifscCode: loginUser.ifscCode,
+        dateOfBirth: loginUser.dateOfBirth,
+        accountNumber: loginUser.accountNumber,
+        accountType: loginUser.accountType,
+        bank: loginUser.bank,
+        branch: loginUser.branch,
+        email: loginUser.email,
+        balance: loginUser.balance,
+      };
       console.log(token);
       return res.status(200).json({
         msg: "Card number and pin are correct. Successfully logged in",
         token: token,
+        user: userData,
       });
     } else {
       return res.status(401).json({ msg: "Wrong pin try again!!!" });
@@ -178,5 +195,10 @@ export const login = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ msg: "Error" + err.message });
+  }
+};
+export const getUser = async (req, res) => {
+  const user = await User.find();
+  if (!user) {
   }
 };

@@ -36,16 +36,19 @@ const Login = () => {
       try {
         const response = await fetch("http://localhost:8080/api/auth/login", {
           method: "POST",
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
-            cardNumber: form.cardNumber,
-            pin: form.pinNumber,
+            accountNumber: form.cardNumber,
+            pin: String(form.pinNumber),
           }),
         });
         const data = await response.json();
         console.log(data);
         if (data.token) {
           localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
           alert("Successfully logined");
           navigate("/");
         }

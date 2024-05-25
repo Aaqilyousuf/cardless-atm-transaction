@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Header from "../components/Header";
 import { IoIosArrowBack } from "react-icons/io";
 import { TbUserX } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/auth-context";
 const Deposit = () => {
   const navigate = useNavigate();
+  const [depositAmount, setDepositAmount] = useState(null);
+  const [balance, setBalance] = useState(null);
+  const { user } = useContext(UserContext);
+  const token = localStorage.getItem("token");
   const handleBack = () => {
     navigate("/");
+  };
+
+  const handleDeposite = async () => {
+    const response = await fetch(
+      "http://localhost:8080/api/transaction/deposit",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ amount: depositAmount }),
+      }
+    );
+    const data = await response.json();
   };
 
   return (
@@ -19,13 +39,17 @@ const Deposit = () => {
               <h1 className="text-2xl text-gray-600 font-extrabold">
                 DEPOSIT CASH
               </h1>
-              <p className="text-gray-600 mt-3">CARD NUMBER</p>
+              <p className="text-gray-600 mt-3">
+                {user ? `${user.accountNumber}` : "CARD NUMBER"}
+              </p>
             </div>
           </div>
           <div className="min-h-[50px] md:col-span-2 bg-[#EEF2FF] rounded-md flex justify-center items-center text-gray-600 p-4 border-2 border-gray-400">
             <div className="text-center">
               <h1 className="font-bold text-[20px] text-gray-400">BALANCE</h1>
-              <p className="font-bold text-[20px] mt-1">$20,897</p>
+              <p className="font-bold text-[20px] mt-1">
+                {user ? `$ ${user.balance}` : "Error in server"}
+              </p>
             </div>
           </div>
           <div
@@ -41,6 +65,8 @@ const Deposit = () => {
             <input
               type="number"
               className="absolute inset-0 w-full bg-transparent z-10 pt-7 pl-10 pr-10 font-bold text-[26px] text-center"
+              value={balance}
+              onChange={(e) => setDepositAmount(e.target.value)}
             />
             <h1 className="absolute top-0 left-0 mb-5 w-full h-full flex justify-center z-0 font-bold text-[20px] text-gray-400 border-2 border-gray-400">
               Inserted Cash
@@ -55,7 +81,12 @@ const Deposit = () => {
           </div>
           <div className="min-h-[50px] md:col-span-1 bg-green-500 rounded-md flex justify-center items-center cursor-pointer">
             <div>
-              <h1 className="text-white font-bold text-[16px]">CONFIRM</h1>
+              <h1
+                className="text-white font-bold text-[16px]"
+                onClick={handleDeposite}
+              >
+                CONFIRM
+              </h1>
             </div>
           </div>
         </div>

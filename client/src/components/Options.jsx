@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import cashImg from "../assets/cash.png";
 import depositImg from "../assets/deposit.png";
 import transferImg from "../assets/transfer.png";
@@ -6,11 +6,14 @@ import balanceImg from "../assets/balance.png";
 import transactionImg from "../assets/transaction.png";
 import userImg from "../assets/user.png";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/auth-context";
+
 const Options = () => {
   const navigate = useNavigate();
-
+  const { user } = useContext(UserContext);
   const handleLogOut = (e) => {
     e.preventDefault();
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -43,7 +46,9 @@ const Options = () => {
     <div>
       <div className="m-4 grid sm:grid-cols-12 gap-4">
         <div className="min-h-[100px] sm:col-span-2 bg-[#40A2D8] rounded-md shadow-md flex justify-center items-center">
-          <h2 className="text-white font-semibold">User Name</h2>
+          <h2 className="text-white font-semibold">
+            {user ? `${user.firstName}  ${user.lastName}` : "Guest"}
+          </h2>
         </div>
         <div className="min-h-[100px] sm:col-span-8 bg-[#141E61] rounded-md shadow-md flex flex-col gap-2 justify-center items-center">
           <h1 className="text-white text-3xl font-semibold">ATM</h1>
@@ -58,7 +63,9 @@ const Options = () => {
       </div>
       <div className="w-full flex justify-center items-center mt-7">
         <div className="w-[90%] sm:w-[800px] h-100 bg-[#424769] rounded-md flex justify-center items-center shadow-lg border-4 border-[#EEF2FF]">
-          <h1 className="text-white text-lg font-medium">Balance $20,789</h1>
+          <h1 className="text-white text-lg font-medium">
+            Balance ${user.balance}
+          </h1>
         </div>
       </div>
       <div className="w-full flex justify-center items-center mt-7">
