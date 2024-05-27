@@ -13,6 +13,10 @@ const Deposit = () => {
   const handleBack = () => {
     navigate("/");
   };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   const handleDeposite = async () => {
     const response = await fetch(
@@ -27,6 +31,8 @@ const Deposit = () => {
       }
     );
     const data = await response.json();
+    console.log(data);
+    setBalance(data.updatedBalance);
   };
 
   return (
@@ -74,7 +80,10 @@ const Deposit = () => {
           </div>
 
           <div className="w-[200px] h-[50px] md:col-span-1 bg-red-500 rounded-md flex justify-center items-center cursor-pointer">
-            <div className="flex items-center text-white font-bold text-[18px]">
+            <div
+              className="flex items-center text-white font-bold text-[18px]"
+              onClick={handleLogout}
+            >
               <TbUserX className="text-[22px]" />
               <h1 className="ml-2">LOGOUT</h1>
             </div>
