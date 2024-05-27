@@ -5,7 +5,15 @@ export const deposit = async (req, res) => {
     const { amount } = req.body;
     const userId = req.userId;
 
-    const updateUserBalance = await User.findByIdAndUpdate();
-  } catch (err) {}
+    const updateUserBalance = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $inc: { balance: amount } },
+      { new: true }
+    );
+    req.json({ updatedBalance: updateUserBalance.balance });
+  } catch (err) {
+    console.error("Error:", err.message);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 export const withdraw = async (req, res) => {};
