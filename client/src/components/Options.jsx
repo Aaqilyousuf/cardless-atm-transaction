@@ -14,6 +14,7 @@ const Options = () => {
   const handleLogOut = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
