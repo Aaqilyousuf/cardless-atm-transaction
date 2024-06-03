@@ -10,6 +10,7 @@ const Deposit = () => {
   const [balance, setBalance] = useState(null);
   const { user } = useContext(UserContext);
   const token = localStorage.getItem("token");
+  // console.log(token);
   const handleBack = () => {
     navigate("/");
   };
@@ -25,9 +26,9 @@ const Deposit = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount: depositAmount }),
+        body: JSON.stringify({ amount: parseFloat(depositAmount) }),
       }
     );
     const data = await response.json();
