@@ -161,7 +161,7 @@ export const login = async (req, res) => {
     if (isPinMatch) {
       const token = jwt.sign(
         {
-          id: loginUser._id,
+          userId: loginUser._id,
           userName: loginUser.firstName + loginUser.lastName,
           userEmail: loginUser.email,
           cretedAt: Date.now(),

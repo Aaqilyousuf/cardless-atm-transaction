@@ -4,6 +4,9 @@ export const deposit = async (req, res) => {
   try {
     const { amount } = req.body;
     const userId = req.userId;
+    const authHeader = req.headers["authorization"];
+
+    console.log("this is from controller: ", userId);
 
     const updateUserBalance = await User.findByIdAndUpdate(
       { _id: userId },
